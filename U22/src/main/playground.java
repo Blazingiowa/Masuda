@@ -6,6 +6,8 @@ public class playground
 	static int[][] textsub = new int[4][3];
 	static int[][] p1_card = new int[3][8];
 	static int[][] p2_card = new int[3][8];
+	static int count = 0;//攻撃を通せるかどうかの判定するための変数
+	static boolean flag = false;
 
 	public static void main(String[] args)
 	{
@@ -72,35 +74,77 @@ public class playground
 
 		for (int i = 0; i < p1_card.length; i++)
 		{
-			//－１でなければ、使ったカードIDが入っている
+			flag = false;
+
 			if (p1_card[i][0] != -1)
 			{
-				//対応IDから調べるためのループ
 				for (int j = 3; j < p1_card[0].length; j++)
 				{
-					//対応IDがー１でなければ、そのIDに対応している
+					count = 0;
+
 					if (p1_card[i][j] != -1)
 					{
-						//その対応IDが敵の使ったカード含まれているかどうかを調べるためのループ
 						for (int k = 0; k < p2_card.length; k++)
 						{
-							if (0 <= p1_card[i][0] && p1_card[i][0] < 12)
+							if (p1_card[i][j] == p2_card[k][0])
 							{
-
+								//自分のカードが攻撃で、相手の防御に防がれたとき
+								if (0 <= p1_card[i][0] && p1_card[i][0] < 12)
+								{
+									textmain[6][k] -= p1_card[i][2] / 2;
+									textsub[1][k] += p1_card[i][2] / 2;
+									flag = true;
+								}
+								//自分のカードが防御で、相手の攻撃を防いだとき
+								else
+								{
+									textmain[4][i] += p2_card[k][2] / 2;
+									textsub[3][i] -= p2_card[k][2] / 2;
+								}
 							}
+
+							else
+							{
+								if (0 <= p1_card[i][0] && p1_card[i][0] < 12)
+								{
+									count++;/**/
+
+									if (count == 3 && flag == false)
+									{
+										textmain[4][i] = p1_card[i][2];
+										textsub[3][i] = -(p1_card[i][2]);
+										count = 0;
+									}
+								}
+							}
+
 						}
 					}
 				}
 			}
 		}
+
 		for (int i = 0; i < textmain[0].length; i++)
 		{
 			System.out.print(" " + textmain[4][i]);
+
 		}
 		System.out.println("");
 		for (int i = 0; i < textmain[0].length; i++)
 		{
 			System.out.print(" " + textmain[6][i]);
+
+		}
+		System.out.println("");
+		for (int i = 0; i < textmain[0].length; i++)
+		{
+			System.out.print(" " + textsub[1][i]);
+		}
+
+		System.out.println("");
+		for (int i = 0; i < textmain[0].length; i++)
+		{
+			System.out.print(" " + textsub[3][i]);
 		}
 	}
 
